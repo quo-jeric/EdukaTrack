@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - EdukaTrack</title>
+    <link rel="icon" type="image/gif" href="/static/pixelbook.gif">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div>
+                <div class="brand">
+                    <div class="brand-logo"><img src="/static/pixelbook.gif" alt="Logo" style="width: 100%; height: 100%; border-radius: 12px; object-fit: cover;"></div>
+                    <div>
+                        <h2>EdukaTrack</h2>
+                        <span>Student Portal</span>
+                    </div>
+                </div>
+
+                <div class="menu-title">Navigation</div>
+                <div class="menu-item active" data-tab="dashboard"><i class="fas fa-chart-line"></i> Dashboard</div>
+                <div class="menu-item" data-tab="schedule"><i class="fas fa-calendar-alt"></i> My Schedule</div>
+                <div class="menu-item" data-tab="grades"><i class="fas fa-star"></i> Grades</div>
+                <div class="menu-item" data-tab="attendance"><i class="fas fa-clipboard-check"></i> Attendance</div>
+                <div class="menu-item" data-tab="assignments"><i class="fas fa-tasks"></i> Assignments</div>
+                <div class="menu-item" data-tab="enroll"><i class="fas fa-plus-circle"></i> Enroll</div>
+                <div class="menu-item" data-tab="profile"><i class="fas fa-user"></i> Profile</div>
+            </div>
+
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+        </div>
+
+        <div class="main">
+            <div class="header">
+                <h1 class="welcome">Welcome, <span id="studentName">Student</span></h1>
+                <div class="user-info">
+                    <div class="user-avatar"><i class="fas fa-user-circle fa-2x"></i></div>
+                    <div>
+                        <div class="user-name" id="userName">Student</div>
+                        <div class="user-role">Student</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <div class="tab-content active" id="dashboardTab">
+                <div class="stats-grid">
+                    <div class="stat-card courses">
+                        <div class="stat-icon"><i class="fas fa-book-open"></i></div>
+                        <div class="stat-label">Enrolled Courses</div>
+                        <div class="stat-value" id="enrolledCourses">0</div>
+                    </div>
+                    <div class="stat-card grades">
+                        <div class="stat-icon"><i class="fas fa-star"></i></div>
+                        <div class="stat-label">Average Grade</div>
+                        <div class="stat-value" id="avgGrade">-</div>
+                    </div>
+                    <div class="stat-card attendance">
+                        <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                        <div class="stat-label">Pending Assignments</div>
+                        <div class="stat-value" id="pendingAssignments">0</div>
+                    </div>
+                </div>
+
+                <div class="content-section" style="margin-top: 30px;">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-history"></i> Recent Activities</h2>
+                    </div>
+                    <div id="recentActivities" class="activities-list">
+                        <p class="loading-text">Loading activities...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="scheduleTab">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-calendar-alt"></i> My Class Schedule</h2>
+                        <input type="text" class="search-box" id="scheduleSearch" placeholder="Search schedule...">
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="subject" data-table="schedule" style="cursor: pointer;">Subject <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="teacher" data-table="schedule" style="cursor: pointer;">Teacher <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="day" data-table="schedule" style="cursor: pointer;">Day <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="time" data-table="schedule" style="cursor: pointer;">Time <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="room" data-table="schedule" style="cursor: pointer;">Room <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="gradesTab">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-star"></i> My Grades</h2>
+                        <div style="font-size: 14px; color: var(--muted);">
+                            Average: <strong id="gradesAverage">-</strong>
+                        </div>
+                    </div>
+                    <div class="grades-grid" id="gradesGrid"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="attendanceTab">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-clipboard-check"></i> My Attendance</h2>
+                    </div>
+                    <div class="attendance-summary" id="attendanceSummary"></div>
+                    <div id="attendanceDetails"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="assignmentsTab">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-tasks"></i> My Assignments</h2>
+                        <input type="text" class="search-box" id="assignmentSearch" placeholder="Search assignments...">
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="name" data-table="assignments" style="cursor: pointer;">Title <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="subject" data-table="assignments" style="cursor: pointer;">Subject <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="teacher" data-table="assignments" style="cursor: pointer;">Professor <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="due_date" data-table="assignments" style="cursor: pointer;">Due Date <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="submitted" data-table="assignments" style="cursor: pointer;">Status <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="grade" data-table="assignments" style="cursor: pointer;">Grade <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignmentsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="enrollTab">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-plus-circle"></i> Available Classes</h2>
+                        <input type="text" class="search-box" id="classesSearch" placeholder="Search classes...">
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="subject" data-table="classes" style="cursor: pointer;">Subject <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="teacher" data-table="classes" style="cursor: pointer;">Teacher <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="day" data-table="classes" style="cursor: pointer;">Day <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="time" data-table="classes" style="cursor: pointer;">Time <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th data-sort="room" data-table="classes" style="cursor: pointer;">Room <i class="fas fa-sort" style="opacity: 0.5;"></i></th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="availableClassesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="profileTab">
+                <div class="content-section">
+                    <h2 class="section-title"><i class="fas fa-user"></i> My Profile</h2>
+                    <div class="profile-grid">
+                        <div class="profile-item">
+                            <label><i class="fas fa-id-badge"></i> Student ID</label>
+                            <p id="profileId">-</p>
+                        </div>
+                        <div class="profile-item">
+                            <label><i class="fas fa-user"></i> Full Name</label>
+                            <p id="profileName">-</p>
+                        </div>
+                        <div class="profile-item">
+                            <label><i class="fas fa-envelope"></i> Email</label>
+                            <p id="profileEmail">-</p>
+                        </div>
+                        <div class="profile-item">
+                            <label><i class="fas fa-phone"></i> Phone Number</label>
+                            <p id="profilePhone">-</p>
+                        </div>
+                        <div class="profile-item">
+                            <label><i class="fas fa-graduation-cap"></i> Program</label>
+                            <p id="profileProgram">-</p>
+                        </div>
+                        <div class="profile-item">
+                            <label><i class="fas fa-layer-group"></i> Year Level</label>
+                            <p id="profileYear">-</p>
+                        </div>
+                        <div class="profile-item">
+                            <label><i class="fas fa-calendar"></i> Term</label>
+                            <p id="profileTerm">-</p>
+                        </div>
+                        <div class="profile-item">
+                            <label><i class="fas fa-users"></i> Section</label>
+                            <p id="profileSection">-</p>
+                        </div>
+                        <div class="profile-item">
+                            <label><i class="fas fa-map-marker-alt"></i> Address</label>
+                            <p id="profileAddress">-</p>
+                        </div>
+                        <div class="profile-item">
+                            <label><i class="fas fa-info-circle"></i> Status</label>
+                            <p id="profileStatus">-</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-warning" id="requestUpdateBtn" style="margin-top: 20px;"><i class="fas fa-edit"></i> Request Profile Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="submitAssignmentModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-paper-plane"></i> Submit Assignment</h2>
+            <form id="submitAssignmentForm">
+                <input type="hidden" id="submitTaskId">
+                <div class="form-group">
+                    <label>Assignment</label>
+                    <input type="text" id="submitTaskName" readonly style="background: #f3f4f6;">
+                </div>
+                <div class="form-group">
+                    <label>Your Submission</label>
+                    <textarea name="content" rows="5" placeholder="Enter your answer or paste a link..." required></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-paper-plane"></i> Submit</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('submitAssignmentModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="updateRequestModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-edit"></i> Request Profile Update</h2>
+            <form id="updateRequestForm">
+                <div class="form-group">
+                    <label>Field to Update</label>
+                    <select name="field" required>
+                        <option value="">Select field</option>
+                        <option value="email">Email</option>
+                        <option value="phone_number">Phone Number</option>
+                        <option value="street_address">Address</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>New Value</label>
+                    <input type="text" name="value" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-paper-plane"></i> Submit Request</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('updateRequestModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/student.js"></script>
+</body>
+</html>
