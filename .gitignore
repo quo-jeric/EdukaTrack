@@ -1,0 +1,36 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment Variables & Secrets
+.env
+.env.local
+*.env
+
+# SQLite Database (if using local dev DB)
+*.sqlite3
+*.db
+
+# Django Static / Media Files (generated locally)
+/staticfiles/
+/media/
+
+# IDE / Editor Settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# Migrations Folder
+core/migrations/  

@@ -1,8 +1,0 @@
-flask==3.0.0
-flask-sqlalchemy
-flask-cors==4.0.0
-sqlalchemy
-bcrypt==4.1.1
-Pyjwt==2.8.0
-dotenv
-gunicorn==21.2.0
