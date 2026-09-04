@@ -3,21 +3,21 @@ from datetime import datetime, date
 
 db = SQLAlchemy()
 
-class Department(db.Model):
+class Department(db.Model): #
     __tablename__ = 'departments'
     id = db.Column(db.Integer, primary_key=True)
     dept_code = db.Column(db.String(10), unique=True, nullable=False)
     dept_name = db.Column(db.String(255), nullable=False)
     dept_head_id = db.Column(db.Integer, db.ForeignKey('teachers.user_id', name='fk_department_head', use_alter=True))
 
-class Program(db.Model):
+class Program(db.Model): #
     __tablename__ = 'programs'
     id = db.Column(db.Integer, primary_key=True)
     program_code = db.Column(db.String(20), unique=True, nullable=False)
     program_name = db.Column(db.String(255), nullable=False)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), nullable=False)
 
-class User(db.Model):
+class User(db.Model): #
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     school_id = db.Column(db.String(50), unique=True, nullable=False)
@@ -40,14 +40,14 @@ class User(db.Model):
         'polymorphic_on': user_type
     }
 
-class Admin(User):
+class Admin(User): #
     __tablename__ = 'admins'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     admin_level = db.Column(db.String(50))
     
     __mapper_args__ = {'polymorphic_identity': 'admin'}
 
-class Teacher(User):
+class Teacher(User): #
     __tablename__ = 'teachers'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
@@ -61,7 +61,7 @@ class Teacher(User):
     
     __mapper_args__ = {'polymorphic_identity': 'teacher'}
 
-class Student(User):
+class Student(User): #
     __tablename__ = 'students'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     program_id = db.Column(db.Integer, db.ForeignKey('programs.id'))
@@ -73,7 +73,7 @@ class Student(User):
     
     __mapper_args__ = {'polymorphic_identity': 'student'}
 
-class Subject(db.Model):
+class Subject(db.Model): #
     __tablename__ = 'subjects'
     id = db.Column(db.Integer, primary_key=True)
     subject_code = db.Column(db.String(20), unique=True, nullable=False)
@@ -82,7 +82,7 @@ class Subject(db.Model):
     description = db.Column(db.Text)
     program_id = db.Column(db.Integer, db.ForeignKey('programs.id'))
 
-class Prerequisite(db.Model):
+class Prerequisite(db.Model): #
     __tablename__ = 'prerequisites'
     id = db.Column(db.Integer, primary_key=True)
     subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))
@@ -113,7 +113,7 @@ class ClassSchedule(db.Model):
     professor = db.relationship('Teacher', foreign_keys=[teacher_id])
     room_obj = db.relationship('Room', foreign_keys=[room_id])
 
-class Enrollment(db.Model):
+class Enrollment(db.Model): #
     __tablename__ = 'enrollments'
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -126,7 +126,7 @@ class Enrollment(db.Model):
     student = db.relationship('User', foreign_keys=[student_id], backref='student_enrollments')
     schedule = db.relationship('ClassSchedule', backref='enrollments')
 
-class EnrollmentRequest(db.Model):
+class EnrollmentRequest(db.Model): #
     __tablename__ = 'enrollment_requests'
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.user_id'))
@@ -159,7 +159,7 @@ class Assignment(db.Model):
     schedule = db.relationship('ClassSchedule', backref='assignments')
     creator = db.relationship('User', foreign_keys=[created_by])
 
-class TaskSubmission(db.Model):
+class TaskSubmission(db.Model): #
     __tablename__ = 'task_submissions'
     id = db.Column(db.Integer, primary_key=True)
     task_id = db.Column(db.Integer, db.ForeignKey('assignments.id'))
@@ -178,7 +178,7 @@ class Attendance(db.Model):
     
     enrollment = db.relationship('Enrollment', backref='attendances')
 
-class UpdateRequest(db.Model):
+class UpdateRequest(db.Model): #
     __tablename__ = 'update_requests'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -187,7 +187,7 @@ class UpdateRequest(db.Model):
     status = db.Column(db.String(50), default='pending')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-class Activity(db.Model):
+class Activity(db.Model): #
     __tablename__ = 'activities'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
@@ -200,7 +200,7 @@ class Activity(db.Model):
     
     user = db.relationship('User', backref='activities')
 
-class TeacherSubjectPreference(db.Model):
+class TeacherSubjectPreference(db.Model): #
     __tablename__ = 'teacher_subject_preferences'
     id = db.Column(db.Integer, primary_key=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.user_id'))
